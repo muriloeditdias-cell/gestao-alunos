@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Gestão de Alunos</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="login-modal">
+  <div class="login-box">
+    <h2>Entrar</h2>
+
+    <input id="loginEmail" type="email" placeholder="Email" autocomplete="username" />
+    <input id="loginSenha" type="password" placeholder="Senha" autocomplete="current-password" />
+
+    <button class="btn login" type="button" onclick="login()">Entrar</button>
+
+    <div id="loginError" class="login-error hidden"></div>
+
+    <div class="login-hint">Acesso restrito.</div>
+  </div>
+</div>
+
+<!-- APP (começa escondido, o JS mostra depois do login) -->
+<div id="app" class="hidden">
+  <div class="topbar">
+    <h1>Gestão de Alunos</h1>
+    <button class="btn danger" type="button" onclick="logout()">Sair</button>
+  </div>
+
+  <div class="form" id="formTopo">
+    <input id="nome" placeholder="Nome do aluno" />
+    <input id="telefone" placeholder="Telefone (WhatsApp)" />
+    <input id="email" placeholder="Email" />
+    <input id="cpf" placeholder="CPF" />
+
+    <select id="plano_tipo" class="slot">
+      <option value="">Plano</option>
+      <option value="mensal">Mensal</option>
+      <option value="anual">Anual</option>
+    </select>
+
+    <select id="freq_semana" class="slot">
+      <option value="">Frequência</option>
+      <option value="1">1x / semana</option>
+      <option value="2">2x / semana</option>
+      <option value="3">3x / semana</option>
+      <option value="4">4x / semana</option>
+      <option value="5">5x / semana</option>
+    </select>
+
+    <input id="valor" type="number" placeholder="Valor" />
+    <input id="vencimento" type="date" />
+    <input id="observacoes" placeholder="Observações (opcional)" />
+
+    <button type="button" onclick="adicionarAluno()">Adicionar</button>
+
+    <div class="agenda-box">
+      <div class="agenda-top">
+        <div class="agenda-title">Agenda selecionada</div>
+        <div class="agenda-status" id="agendaStatus"></div>
+      </div>
+      <div class="agenda-selecionada" id="agendaSelecionada"></div>
+      <div class="agenda-actions">
+        <button class="btn danger" type="button" onclick="limparAgenda()">Limpar agenda</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input id="busca" placeholder="Buscar aluno pelo nome..." oninput="listarAlunos()" />
+    <select id="filtro" class="slot" onchange="listarAlunos()">
+      <option value="todos">Todos</option>
+      <option value="pagos">Pagos (competência)</option>
+      <option value="abertos">Em aberto (competência)</option>
+    </select>
+  </div>
+
+  <!-- GRADE (COM TOGGLE) -->
+  <div class="grade-wrap">
+    <div class="grade-head">
+      <div class="grade-head-left">
+        <button class="toggle-grade" type="button" onclick="toggleGrade()">
+          <span id="toggleGradeIcon" class="icon">▲</span>
+        </button>
+        <h2>Grade por horário (clique para escolher)</h2>
+      </div>
+
+      <div class="legenda">
+        <span class="chip aberto">Vagas</span>
+        <span class="chip cheio">Cheio</span>
+        <span class="chip fechado">Fechado</span>
+        <span class="chip sel">Selecionado</span>
+      </div>
+    </div>
+
+    <div id="gradeContainer">
+      <div class="grade" id="grade"></div>
+      <p class="dica">Clique no card para selecionar o horário. Clique em “Ver” para listar alunos do horário.</p>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Aluno</th>
+        <th>Plano</th>
+        <th>Próximo vencimento</th>
+        <th>Status / Ações</th>
+      </tr>
+    </thead>
+    <tbody id="lista"></tbody>
+  </table>
+</div>
+
+<!-- MODAL PERFIL / HORÁRIO -->
+<div id="modal" class="modal hidden" onclick="fecharModalCliqueFora(event)">
+  <div class="modal-box" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <h2 id="modalTitulo">Perfil</h2>
+      <button class="x" onclick="fecharModal()">✕</button>
+    </div>
+    <div id="modalConteudo"></div>
+    <div class="modal-foot">
+      <button class="btn danger" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
