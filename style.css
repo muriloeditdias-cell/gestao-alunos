@@ -718,3 +718,161 @@ body {
   }
 }
 
+/* =========================
+   GRADE RESPONSIVA (MOBILE)
+   ========================= */
+
+.grade-wrap {
+  width: 100%;
+}
+
+#gradeContainer {
+  width: 100%;
+}
+
+/* onde a grid é renderizada */
+#grade {
+  width: 100%;
+  overflow-x: auto;                /* ✅ libera arrastar pro lado */
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 10px;
+  scroll-behavior: smooth;
+}
+
+/* a grid interna precisa ter largura mínima, senão não existe scroll */
+#grade .grid {
+  min-width: 980px;                /* ajuste fino: 900~1200 */
+}
+
+/* fixa a coluna de horário */
+#grade .cell.time,
+#grade .cell.head.time {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  backdrop-filter: blur(10px);
+}
+
+/* dica visual (pode remover se não quiser) */
+#grade::after {
+  content: "↔ arraste para ver os dias";
+  display: block;
+  font-size: 12px;
+  opacity: .75;
+  margin-top: 8px;
+}
+
+/* =========================
+   TOPBAR + FORM RESPONSIVO
+   ========================= */
+
+#app {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.topbar h1 {
+  margin: 0;
+  line-height: 1.05;
+}
+
+/* FORM vira grid responsivo */
+.form#formTopo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* inputs / selects / buttons ocupam toda coluna */
+.form#formTopo input,
+.form#formTopo select,
+.form#formTopo button {
+  width: 100%;
+}
+
+/* botão Adicionar ocupa as 2 colunas no desktop */
+.form#formTopo > button {
+  grid-column: 1 / -1;
+}
+
+/* agenda ocupa as 2 colunas */
+.agenda-box {
+  grid-column: 1 / -1;
+}
+
+/* toolbar (busca + filtro) */
+.toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+@media (max-width: 700px) {
+  #app {
+    padding: 0 14px;
+  }
+
+  .topbar h1 {
+    font-size: 44px;     /* deixa o título grande, mas controlado */
+  }
+
+  .topbar .btn.danger {
+    white-space: nowrap;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 999px;
+  }
+
+  /* form vira 1 coluna */
+  .form#formTopo {
+    grid-template-columns: 1fr;
+  }
+
+  /* toolbar vira 1 coluna */
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  /* dica sob a grade com mais respiro */
+  .dica {
+    margin-top: 10px;
+    font-size: 12px;
+    opacity: .8;
+  }
+}
+
+/* =========================
+   TABELA RESPONSIVA
+   ========================= */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* no mobile, deixa rolar pro lado */
+@media (max-width: 700px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+}
+
+
+
