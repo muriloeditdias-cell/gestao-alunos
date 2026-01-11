@@ -18,19 +18,40 @@
 
 <!-- LOGIN MODAL -->
 <div id="loginModal" class="login-modal">
-  <div class="login-box">
-    <h2>Entrar</h2>
+  <div class="login-card">
+    <div class="brand">
+      <img src="logo.png" alt="Fran Wolf Studio" class="brand-logo" />
+      <div class="brand-text">
+        <div class="brand-title">Gestão de Alunos</div>
+        <div class="brand-sub">Acesso restrito</div>
+      </div>
+    </div>
 
-    <input id="loginEmail" type="email" placeholder="Email" autocomplete="username" />
-    <input id="loginSenha" type="password" placeholder="Senha" autocomplete="current-password" />
+    <h2 class="login-title">Entrar</h2>
 
-    <button class="btn login" type="button" onclick="login()">Entrar</button>
+    <label class="field">
+      <span>Email</span>
+      <input id="loginEmail" type="email" placeholder="seuemail@..." autocomplete="username" />
+    </label>
+
+    <label class="field">
+      <span>Senha</span>
+      <input id="loginSenha" type="password" placeholder="••••••••" autocomplete="current-password" />
+    </label>
+
+    <button class="btn-login" type="button" onclick="login()">Entrar</button>
 
     <div id="loginError" class="login-error hidden"></div>
+  </div>
 
-    <div class="login-hint">Acesso restrito.</div>
+  <!-- Suporte fixo embaixo -->
+  <div class="login-support">
+    <a class="support-link" href="https://wa.me/55SEUNUMEROAQUI" target="_blank" rel="noreferrer">
+      Suporte • Falar no WhatsApp
+    </a>
   </div>
 </div>
+
 
 <!-- APP (começa escondido, o JS mostra depois do login) -->
 <div id="app" class="hidden">
@@ -141,5 +162,6 @@
 <script src="script.js"></script>
 </body>
 </html>
+
 
 
