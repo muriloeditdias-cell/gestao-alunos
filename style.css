@@ -634,4 +634,87 @@ body {
   }
 }
 
+/* =========================
+   MOBILE / PWA RESPONSIVO
+   ========================= */
+
+/* deixa o layout respirar no celular */
+@media (max-width: 700px) {
+  body {
+    overflow-x: hidden; /* evita “vazar” lateral */
+  }
+
+  /* containers principais (ajuste se seus nomes forem diferentes) */
+  .container, .wrap, #app {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  /* cards mais “app” */
+  .card, .panel, .box, .section {
+    border-radius: 22px;
+  }
+
+  /* título menor no celular (se estiver gigante) */
+  h1 {
+    font-size: 44px;
+    line-height: 1.05;
+  }
+}
+
+/* =========================
+   GRADE: scroll horizontal no mobile
+   ========================= */
+
+#grade {
+  /* garante que a área da grade possa rolar */
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 10px;
+  scroll-behavior: smooth;
+}
+
+/* a grid interna precisa ter “largura mínima” pra existir scroll */
+#grade .grid {
+  min-width: 980px; /* ajuste fino: 900~1200 dependendo do seu grid */
+}
+
+/* deixa a primeira coluna “Horário” fixa quando arrasta pro lado */
+#grade .cell.time,
+#grade .cell.head.time {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  backdrop-filter: blur(8px);
+}
+
+/* melhora o toque no celular (menos “cliques acidentais”) */
+#grade .slotbox {
+  touch-action: pan-x pan-y;
+}
+
+/* opcional: indica visualmente que dá pra arrastar pro lado */
+#grade::after {
+  content: "↔ arraste para ver os dias";
+  display: block;
+  font-size: 12px;
+  opacity: .7;
+  margin-top: 8px;
+}
+
+@media (max-width: 700px) {
+  #grade .slotbox .sub {
+    font-size: 11px;
+    opacity: .8;
+  }
+  #grade .slotbox .top {
+    font-size: 13px;
+  }
+  #grade .slotbox .mini {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+  }
+}
 
