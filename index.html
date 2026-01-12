@@ -223,6 +223,19 @@
     <div id="modalConteudo"></div>
     <div class="modal-foot">
       <button class="btn danger" onclick="fecharModal()">Fechar</button>
+      <div class="perfil-actions">
+  <button class="btn ${pag?.pago ? 'pago' : 'aberto'}"
+    onclick="togglePagamentoMes(${aluno.id}, '${compAluno}', this)"
+  >
+    ${pag?.pago ? 'Marcar como em aberto' : 'Marcar como pago'}
+  </button>
+
+  <button class="btn danger"
+    onclick="excluirAluno(${aluno.id}, '${escapeHtml(aluno.nome).replaceAll("'", "\\'")}')"
+  >
+    Excluir aluno
+  </button>
+</div>
     </div>
   </div>
 </div>
@@ -230,3 +243,4 @@
 <script src="script.js"></script>
 </body>
 </html>
+
