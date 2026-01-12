@@ -1032,5 +1032,45 @@ table {
   width: 100%;
 }
 
+.pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 900;
+  border: 1px solid rgba(255,255,255,0.10);
+  white-space: nowrap;
+}
+
+.pill.pago{
+  background: rgba(34,197,94,0.18);
+  color: var(--green);
+  border-color: rgba(34,197,94,0.35);
+}
+.pill.aberto{
+  background: rgba(239,68,68,0.18);
+  color: var(--red);
+  border-color: rgba(239,68,68,0.35);
+}
+
+.status-cell{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.perfil-actions{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+
+
 
 
