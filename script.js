@@ -738,3 +738,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('freq_semana')?.addEventListener('change', atualizarAgendaUI)
   applyAuthUI()
 })
+
+function trocarTela(tela) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+  });
+
+  document.getElementById(`screen-${tela}`).classList.add('active');
+}
