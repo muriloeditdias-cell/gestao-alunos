@@ -331,8 +331,12 @@ window.verAlunosDoHorario = async function(dia, ini, fim){
       <div class="slot-lista">${listaHtml}</div>
     `
 
-    // ✅ LIMPA o rodapé (caso tenha ficado botão do perfil antes)
-    const foot = document.getElementById('modalFoot')
+    // ✅ limpa qualquer rodapé do perfil
+    const foot =
+      document.getElementById('modalFoot') ||
+      document.getElementById('modalFooter') ||
+      document.querySelector('#modal .perfil-actions') ||
+      document.querySelector('#modal .modal-foot')
     if (foot) foot.innerHTML = ''
 
     document.getElementById('modal').classList.remove('hidden')
@@ -629,8 +633,13 @@ window.abrirPerfil = async function(id){
     ${wppLink ? `<a class="link" href="${wppLink}" target="_blank">Abrir WhatsApp</a>` : ''}
   `
 
-  // ✅ BOTÕES NO RODAPÉ (sem duplicar / sem mensagem azul)
-  const foot = document.getElementById('modalFoot')
+  // ✅ pega o rodapé certo (aceita vários ids/classes) e SOBRESCREVE TUDO
+  const foot =
+    document.getElementById('modalFoot') ||
+    document.getElementById('modalFooter') ||
+    document.querySelector('#modal .perfil-actions') ||
+    document.querySelector('#modal .modal-foot')
+
   if (foot) {
     foot.innerHTML = `
       <button
