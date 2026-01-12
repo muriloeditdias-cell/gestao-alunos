@@ -71,16 +71,16 @@
           <span>Franciele</span>
         </h1>
 
-        <!-- GRADE (ALUNOS) -->
+        <!-- GRADE -->
         <div class="section-card">
           <button class="toggle-grade" type="button" onclick="toggleGrade()">
             <span>Grade de horários</span>
-            <span id="toggleGradeIconAlunos">▲</span>
+            <span id="toggleGradeIcon">▲</span>
           </button>
 
-          <div id="gradeContainerAlunos">
-            <div class="grade" id="gradeAlunos"></div>
-            <p class="dica">Clique em “Ver” para listar alunos do horário.</p>
+          <div id="gradeContainer">
+            <div class="grade" id="grade"></div>
+            <p class="dica">Clique no card para selecionar o horário. Clique em “Ver” para listar alunos do horário.</p>
           </div>
         </div>
 
@@ -133,19 +133,6 @@
           <input id="valor" type="number" placeholder="Valor" />
           <input id="vencimento" type="date" />
           <input id="observacoes" placeholder="Observações (opcional)" />
-
-          <!-- GRADE (CADASTRO +) -->
-          <div class="section-card">
-            <button class="toggle-grade" type="button" onclick="toggleGrade()">
-              <span>Grade de horários</span>
-              <span id="toggleGradeIconCadastro">▲</span>
-            </button>
-
-            <div id="gradeContainerCadastro">
-              <div class="grade" id="gradeCadastro"></div>
-              <p class="dica">Clique no card para selecionar o horário. Clique em “Ver” para listar alunos do horário.</p>
-            </div>
-          </div>
 
           <button type="button" onclick="adicionarAluno()">Adicionar</button>
 
