@@ -1138,3 +1138,33 @@ body {
   width: max-content;
 }
 
+/* =========================
+   FIX PC: Cadastro em 1 coluna
+   (Observações não fica do lado da grade)
+   ========================= */
+
+@media (min-width: 900px) {
+  /* garante que a tela de cadastro não tente criar colunas */
+  #screen-cadastro .form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  /* cada campo ocupa 100% */
+  #screen-cadastro .form input,
+  #screen-cadastro .form select,
+  #screen-cadastro .form button,
+  #screen-cadastro .form .section-card,
+  #screen-cadastro .form .agenda-box {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* a grade também fica 100% (não “sobra espaço” pro lado) */
+  #screen-cadastro #gradeContainerCadastro {
+    width: 100% !important;
+  }
+}
+
