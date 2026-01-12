@@ -205,7 +205,13 @@ function proximoVencimentoReal(diaVenc){
   return vencimentoDoMes(diaVenc, addMonthsToCompetencia(compBase, 1))
 }
 
-// ======================= ✅ NOVA REGRA: NUNCA MOSTRAR O MESMO MÊS DO INÍCIO =======================
+function getFreq(){
+  const v = document.getElementById('freq_semana')?.value
+  const n = Number(v)
+  return Number.isFinite(n) ? n : 0
+}
+
+/* ======================= ✅ ALTERAÇÃO: COMPETÊNCIA / PRÓXIMA MENSALIDADE COM "COMEÇOU EM" ======================= */
 function competenciaMinimaPorInicio(vencISO){
   if (!vencISO) return null
   const startComp = String(vencISO).slice(0,7) // YYYY-MM
@@ -229,7 +235,7 @@ function proximaMensalidadeComInicio(vencISO){
   const hojeISO = dataHojeISO()
   const hojeComp = hojeISO.slice(0,7)
 
-  const compMin = competenciaMinimaPorInicio(vencISO) // mês seguinte ao início (obrigatório)
+  const compMin = competenciaMinimaPorInicio(vencISO) // mês seguinte ao início
   let compBase = hojeComp
   if (compMin && compBase < compMin) compBase = compMin
 
@@ -238,12 +244,8 @@ function proximaMensalidadeComInicio(vencISO){
 
   return vencimentoDoMes(diaVenc, addMonthsToCompetencia(compBase, 1))
 }
+/* ======================= ✅ FIM ALTERAÇÃO ======================= */
 
-function getFreq(){
-  const v = document.getElementById('freq_semana')?.value
-  const n = Number(v)
-  return Number.isFinite(n) ? n : 0
-}
 
 // ======================= AGENDA UI =======================
 function atualizarAgendaUI(){
@@ -428,6 +430,7 @@ function renderGradeInto(targetId, countMap){
           </div>
         `
 
+        // ✅ cadastro (+) seleciona agenda clicando no card
         box.addEventListener('click', async (ev) => {
           if (ev.target && ev.target.classList.contains('mini')) return
 
@@ -544,8 +547,8 @@ async function listarAlunos(){
     const nomeLower = String(aluno.nome || '').toLowerCase()
     if (busca && !nomeLower.includes(buscaLower)) return
 
-    const diaVenc = extrairDiaVencimento(aluno.vencimento)
-    const compAluno = competenciaAtualPorDiaVenc(diaVenc)
+    // ✅ ALTERAÇÃO: competência respeita "começou em" (sempre começa no mês seguinte)
+    const compAluno = competenciaAtualPorDiaVencComInicio(aluno.vencimento)
 
     const pag = pagMap.get(`${aluno.id}|${compAluno}`)
     const statusPago = pag?.pago === true
@@ -594,8 +597,8 @@ window.abrirPerfil = async function(id){
     return
   }
 
-  const diaVenc = extrairDiaVencimento(aluno.vencimento)
-  const compAluno = competenciaAtualPorDiaVenc(diaVenc)
+  // ✅ ALTERAÇÃO: competência respeita "começou em" (sempre começa no mês seguinte)
+  const compAluno = competenciaAtualPorDiaVencComInicio(aluno.vencimento)
 
   const { data: pag, error: errPag } = await supabaseClient
     .from('pagamentos')
@@ -612,7 +615,10 @@ window.abrirPerfil = async function(id){
 
   const comecouBR = formatarBR(aluno.vencimento)
   const pagouBR = pag?.pago ? formatarBR(pag?.data_pagamento) : '-'
-  const proxBR = formatarBR(proximoVencimentoReal(diaVenc))
+
+  // ✅ ALTERAÇÃO: próxima mensalidade nunca é do mesmo mês do "começou em"
+  const proxBR = formatarBR(proximaMensalidadeComInicio(aluno.vencimento))
+
   const statusTxt = pag?.pago ? `Pago (${compAluno})` : `Em aberto (${compAluno})`
 
   const telefoneDigits = apenasDigitos(aluno.telefone)
