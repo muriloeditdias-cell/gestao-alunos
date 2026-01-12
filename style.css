@@ -1125,3 +1125,16 @@ body {
   touch-action: manipulation;
 }
 
+/* scroll horizontal só da grade */
+.grade-scroll{
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+
+/* força a grade a ter largura maior que a tela (pra poder arrastar) */
+.grade-scroll .grid{
+  width: max-content;
+}
+
