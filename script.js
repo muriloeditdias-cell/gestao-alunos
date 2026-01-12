@@ -520,23 +520,9 @@ async function listarAlunos(){
     if (filtro === 'pagos' && !statusPago) return
     if (filtro === 'abertos' && statusPago) return
 
-    const proxISO = proximoVencimentoReal(diaVenc)
-    const proxBR = formatarBR(proxISO)
-
     const planoShow = aluno.plano_tipo
       ? `${aluno.plano_tipo} • ${aluno.freq_semana || '-'}x/sem`
       : '-'
-
-    const statusBtn = `
-      <button class="btn ${statusPago ? 'pago' : 'aberto'}"
-        data-status="${statusPago ? '1' : '0'}"
-        onclick="togglePagamentoMes(${aluno.id}, '${compAluno}', this)"
-        title="Competência: ${compAluno}"
-      >${statusPago ? 'Pago' : 'Em aberto'}</button>
-    `
-
-    const perfilBtn = `<button class="btn perfil" onclick="abrirPerfil(${aluno.id})">Ver</button>`
-    const excluirBtn = `<button class="btn danger" onclick="excluirAluno(${aluno.id}, '${escapeHtml(aluno.nome).replaceAll("'", "\\'")}')">Excluir</button>`
 
     const tr = document.createElement('tr')
     tr.innerHTML = `
@@ -746,3 +732,4 @@ function trocarTela(tela) {
 
   document.getElementById(`screen-${tela}`).classList.add('active');
 }
+
