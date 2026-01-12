@@ -1073,8 +1073,4 @@ table {
 /* FORÇA: só a tela ativa aparece */
 .screen { display: none !important; }
 .screen.active { display: block !important; }
-
-
-
-
-
+'
