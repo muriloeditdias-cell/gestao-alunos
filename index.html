@@ -73,16 +73,34 @@
         <span>Franciele</span>
       </h1>
 
+      <!-- ✅ GRADE MOVIDA PRA CÁ -->
       <div class="section-card">
-        <button class="toggle-grade" onclick="toggleGrade()">
+        <button class="toggle-grade" type="button" onclick="toggleGrade()">
           <span>Grade de horários</span>
           <span id="toggleGradeIcon">▲</span>
         </button>
 
         <div id="gradeContainer">
-          <!-- SUA GRADE VAI CONTINUAR AQUI -->
+          <div class="grade-wrap">
+            <div class="grade-head">
+              <div class="grade-head-left">
+                <h2>Grade por horário (clique para escolher)</h2>
+              </div>
+
+              <div class="legenda">
+                <span class="chip aberto">Vagas</span>
+                <span class="chip cheio">Cheio</span>
+                <span class="chip fechado">Fechado</span>
+                <span class="chip sel">Selecionado</span>
+              </div>
+            </div>
+
+            <div class="grade" id="grade"></div>
+            <p class="dica">Clique no card para selecionar o horário. Clique em “Ver” para listar alunos do horário.</p>
+          </div>
         </div>
       </div>
+      <!-- ✅ /GRADE -->
 
       <div class="section-card">
         <input
@@ -176,29 +194,7 @@
     </select>
   </div>
 
-  <!-- GRADE (COM TOGGLE) -->
-  <div class="grade-wrap">
-    <div class="grade-head">
-      <div class="grade-head-left">
-        <button class="toggle-grade" type="button" onclick="toggleGrade()">
-          <span id="toggleGradeIcon" class="icon">▲</span>
-        </button>
-        <h2>Grade por horário (clique para escolher)</h2>
-      </div>
-
-      <div class="legenda">
-        <span class="chip aberto">Vagas</span>
-        <span class="chip cheio">Cheio</span>
-        <span class="chip fechado">Fechado</span>
-        <span class="chip sel">Selecionado</span>
-      </div>
-    </div>
-
-    <div id="gradeContainer">
-      <div class="grade" id="grade"></div>
-      <p class="dica">Clique no card para selecionar o horário. Clique em “Ver” para listar alunos do horário.</p>
-    </div>
-  </div>
+  <!-- ❌ REMOVIDO: GRADE (COM TOGGLE) ANTIGA (DUPLICAVA IDs) -->
 
   <table>
     <thead>
@@ -241,6 +237,3 @@
 <script src="script.js"></script>
 </body>
 </html>
-
-
-
