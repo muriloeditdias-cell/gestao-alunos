@@ -205,6 +205,40 @@ function proximoVencimentoReal(diaVenc){
   return vencimentoDoMes(diaVenc, addMonthsToCompetencia(compBase, 1))
 }
 
+// ======================= ✅ NOVA REGRA: NUNCA MOSTRAR O MESMO MÊS DO INÍCIO =======================
+function competenciaMinimaPorInicio(vencISO){
+  if (!vencISO) return null
+  const startComp = String(vencISO).slice(0,7) // YYYY-MM
+  return addMonthsToCompetencia(startComp, 1)  // sempre mês seguinte ao início
+}
+
+function competenciaAtualPorDiaVencComInicio(vencISO){
+  const diaVenc = extrairDiaVencimento(vencISO)
+  const compCalc = competenciaAtualPorDiaVenc(diaVenc) // regra normal
+  const compMin = competenciaMinimaPorInicio(vencISO)
+  if (!compMin) return compCalc
+  return (compCalc < compMin) ? compMin : compCalc
+}
+
+function proximaMensalidadeComInicio(vencISO){
+  if (!vencISO) return null
+
+  const diaVenc = extrairDiaVencimento(vencISO)
+  if (!diaVenc) return null
+
+  const hojeISO = dataHojeISO()
+  const hojeComp = hojeISO.slice(0,7)
+
+  const compMin = competenciaMinimaPorInicio(vencISO) // mês seguinte ao início (obrigatório)
+  let compBase = hojeComp
+  if (compMin && compBase < compMin) compBase = compMin
+
+  const vencEsteMes = vencimentoDoMes(diaVenc, compBase)
+  if (vencEsteMes && hojeISO <= vencEsteMes) return vencEsteMes
+
+  return vencimentoDoMes(diaVenc, addMonthsToCompetencia(compBase, 1))
+}
+
 function getFreq(){
   const v = document.getElementById('freq_semana')?.value
   const n = Number(v)
@@ -394,7 +428,6 @@ function renderGradeInto(targetId, countMap){
           </div>
         `
 
-        // ✅ cadastro (+) seleciona agenda clicando no card
         box.addEventListener('click', async (ev) => {
           if (ev.target && ev.target.classList.contains('mini')) return
 
