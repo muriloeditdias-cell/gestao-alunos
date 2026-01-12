@@ -1168,3 +1168,8 @@ body {
   }
 }
 
+.closed {
+  display: none;
+}
+
+
