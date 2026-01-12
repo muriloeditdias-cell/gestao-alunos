@@ -64,6 +64,13 @@ window.logout = async function(){
   await supabaseClient.auth.signOut()
 }
 
+window.abrirSuporte = function () {
+  const telefone = '5546999053065' // seu WhatsApp com DDI + DDD
+  const mensagem = encodeURIComponent('Olá, preciso de suporte 😊')
+  window.open(`https://wa.me/${telefone}?text=${mensagem}`, '_blank')
+}
+
+
 async function applyAuthUI(){
   const app = document.getElementById('app')
   const loginModal = document.getElementById('loginModal')
@@ -780,3 +787,4 @@ function trocarTela(tela) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
   document.getElementById(`screen-${tela}`)?.classList.add('active')
 }
+
