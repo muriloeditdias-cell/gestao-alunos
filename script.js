@@ -15,27 +15,35 @@ function setLoginError(msg){
   show(box)
 }
 
-// ======================= TOGGLE GRADE =======================
-function setGradeOpen(isOpen){
-  const box = document.getElementById('gradeContainer')
-  const icon = document.getElementById('toggleGradeIcon')
-  if (!box || !icon) return
+// ======================= TOGGLE GRADE (2 TELAS) =======================
+let gradeAberta = true
 
-  if (isOpen) {
-    box.classList.remove('closed')
-    icon.textContent = '▲'
-  } else {
-    box.classList.add('closed')
-    icon.textContent = '▼'
-  }
+function setGradeOpen(isOpen){
+  gradeAberta = !!isOpen
+
+  const containers = [
+    document.getElementById('gradeContainerAlunos'),
+    document.getElementById('gradeContainerCadastro'),
+  ].filter(Boolean)
+
+  const icons = [
+    document.getElementById('toggleGradeIconAlunos'),
+    document.getElementById('toggleGradeIconCadastro'),
+  ].filter(Boolean)
+
+  containers.forEach(box => {
+    if (gradeAberta) box.classList.remove('closed')
+    else box.classList.add('closed')
+  })
+
+  icons.forEach(icon => {
+    icon.textContent = gradeAberta ? '▲' : '▼'
+  })
 }
 
 // precisa existir pro onclick do HTML
 window.toggleGrade = function(){
-  const box = document.getElementById('gradeContainer')
-  if (!box) return
-  const aberto = !box.classList.contains('closed')
-  setGradeOpen(!aberto)
+  setGradeOpen(!gradeAberta)
 }
 
 // ======================= LOGIN (SUPABASE AUTH) =======================
@@ -55,7 +63,6 @@ window.login = async function(){
     return
   }
 
-  // limpa senha
   const senhaEl = document.getElementById('loginSenha')
   if (senhaEl) senhaEl.value = ''
 }
@@ -64,7 +71,6 @@ window.logout = async function(){
   await supabaseClient.auth.signOut()
 }
 
-// controla UI
 async function applyAuthUI(){
   const app = document.getElementById('app')
   const loginModal = document.getElementById('loginModal')
@@ -76,10 +82,9 @@ async function applyAuthUI(){
     hide(loginModal)
     show(app)
 
-    // inicializa grade aberta
+    // grade começa aberta nas duas telas
     setGradeOpen(true)
 
-    // carrega dados
     atualizarAgendaUI()
     await listarAlunos()
   } else {
@@ -330,15 +335,6 @@ window.verAlunosDoHorario = async function(dia, ini, fim){
       <div class="slot-topline"><b>Vagas:</b> ${total}/${LIMITE_POR_SLOT}</div>
       <div class="slot-lista">${listaHtml}</div>
     `
-
-    // ✅ limpa qualquer rodapé do perfil
-    const foot =
-      document.getElementById('modalFoot') ||
-      document.getElementById('modalFooter') ||
-      document.querySelector('#modal .perfil-actions') ||
-      document.querySelector('#modal .modal-foot')
-    if (foot) foot.innerHTML = ''
-
     document.getElementById('modal').classList.remove('hidden')
   }catch(e){
     console.error(e)
@@ -346,7 +342,7 @@ window.verAlunosDoHorario = async function(dia, ini, fim){
   }
 }
 
-// ======================= GRADE =======================
+// ======================= GRADE (DUAS TELAS) =======================
 function cellDiv(text, cls){
   const d = document.createElement('div')
   d.className = cls
@@ -359,10 +355,10 @@ function isSelecionado(dia, ini, fim){
   return sel && sel.ini === ini && sel.fim === fim
 }
 
-function renderGrade(countMap){
-  ultimoCountMap = countMap
-  const grade = document.getElementById('grade')
-  if (!grade) return
+// renderiza em UM alvo (alunos = só ver / cadastro = seleciona agenda)
+function renderGradeInto(targetId, countMap, selectable){
+  const gradeEl = document.getElementById(targetId)
+  if (!gradeEl) return
 
   const grid = document.createElement('div')
   grid.className = 'grid'
@@ -406,32 +402,35 @@ function renderGrade(countMap){
           </div>
         `
 
-        box.addEventListener('click', async (ev) => {
-          if (ev.target && ev.target.classList.contains('mini')) return
+        // ✅ só no cadastro (+) permite selecionar agenda clicando no card
+        if (selectable) {
+          box.addEventListener('click', async (ev) => {
+            if (ev.target && ev.target.classList.contains('mini')) return
 
-          const freq = getFreq()
-          if (!freq) return alert('Escolha a frequência (x/semana) antes de montar a agenda.')
+            const freq = getFreq()
+            if (!freq) return alert('Escolha a frequência (x/semana) antes de montar a agenda.')
 
-          const jaTemDia = !!agendaSelecionada[d.key]
-          const totalSel = Object.keys(agendaSelecionada).length
-          if (!jaTemDia && totalSel >= freq) {
-            return alert(`Você já selecionou ${totalSel}/${freq} dias. Remova um dia para adicionar outro.`)
-          }
-
-          try{
-            const qtdAgora = await contarNoDiaSlot(d.key, ini, fim)
-            if (qtdAgora >= LIMITE_POR_SLOT) {
-              return alert(`CHEIO: ${d.label} ${ini}-${fim} (${qtdAgora}/${LIMITE_POR_SLOT})`)
+            const jaTemDia = !!agendaSelecionada[d.key]
+            const totalSel = Object.keys(agendaSelecionada).length
+            if (!jaTemDia && totalSel >= freq) {
+              return alert(`Você já selecionou ${totalSel}/${freq} dias. Remova um dia para adicionar outro.`)
             }
-          }catch(e){
-            console.error(e)
-            return alert('Erro ao checar lotação (veja o console).')
-          }
 
-          agendaSelecionada[d.key] = { ini, fim }
-          atualizarAgendaUI()
-          renderGrade(ultimoCountMap || countMap)
-        })
+            try{
+              const qtdAgora = await contarNoDiaSlot(d.key, ini, fim)
+              if (qtdAgora >= LIMITE_POR_SLOT) {
+                return alert(`CHEIO: ${d.label} ${ini}-${fim} (${qtdAgora}/${LIMITE_POR_SLOT})`)
+              }
+            }catch(e){
+              console.error(e)
+              return alert('Erro ao checar lotação (veja o console).')
+            }
+
+            agendaSelecionada[d.key] = { ini, fim }
+            atualizarAgendaUI()
+            renderGrade(ultimoCountMap || countMap)
+          })
+        }
       }
 
       cell.appendChild(box)
@@ -439,8 +438,14 @@ function renderGrade(countMap){
     })
   })
 
-  grade.innerHTML = ''
-  grade.appendChild(grid)
+  gradeEl.innerHTML = ''
+  gradeEl.appendChild(grid)
+}
+
+function renderGrade(countMap){
+  ultimoCountMap = countMap
+  renderGradeInto('gradeAlunos', countMap, false)   // tela alunos: só ver
+  renderGradeInto('gradeCadastro', countMap, true)  // tela +: seleciona agenda
 }
 
 // ======================= PAGAMENTO =======================
@@ -499,11 +504,9 @@ async function listarAlunos(){
     return
   }
 
-  // atualiza grade contagem
   const agendaRows = await fetchAgenda()
   renderGrade(buildCountMap(agendaRows))
 
-  // pagamentos mês e próximo
   const hoje = new Date()
   const compAtual = competenciaFromYearMonth(hoje.getFullYear(), hoje.getMonth()+1)
   const compProx = addMonthsToCompetencia(compAtual, 1)
@@ -533,7 +536,6 @@ async function listarAlunos(){
       ? `${aluno.plano_tipo} • ${aluno.freq_semana || '-'}x/sem`
       : '-'
 
-    // ✅ LISTA: Nome | Plano | Status (pill) + Ver
     const tr = document.createElement('tr')
     tr.innerHTML = `
       <td>${escapeHtml(aluno.nome)}</td>
@@ -547,7 +549,6 @@ async function listarAlunos(){
   })
 }
 
-// ✅ EXPÕE DIRETO (SEM LOOP)
 window.listarAlunos = listarAlunos
 
 // ======================= PERFIL =======================
@@ -631,17 +632,8 @@ window.abrirPerfil = async function(id){
     </div>
 
     ${wppLink ? `<a class="link" href="${wppLink}" target="_blank">Abrir WhatsApp</a>` : ''}
-  `
 
-  // ✅ pega o rodapé certo (aceita vários ids/classes) e SOBRESCREVE TUDO
-  const foot =
-    document.getElementById('modalFoot') ||
-    document.getElementById('modalFooter') ||
-    document.querySelector('#modal .perfil-actions') ||
-    document.querySelector('#modal .modal-foot')
-
-  if (foot) {
-    foot.innerHTML = `
+    <div class="perfil-actions">
       <button
         class="btn ${statusAtual ? 'aberto' : 'pago'}"
         data-status="${statusAtual ? '1' : '0'}"
@@ -649,9 +641,8 @@ window.abrirPerfil = async function(id){
       >${toggleTxt}</button>
 
       <button class="btn danger" onclick="excluirAluno(${id}, '${nomeEsc}')">Excluir aluno</button>
-    `
-  }
-
+    </div>
+  `
   document.getElementById('modal').classList.remove('hidden')
 }
 
@@ -730,7 +721,8 @@ window.adicionarAluno = async function(){
 
   const alunoId = alunoCriado.id
 
-  const rowsAgenda = diasEscolhidos.map(dia => ({
+  const diasEscolhidos2 = Object.keys(agendaSelecionada)
+  const rowsAgenda = diasEscolhidos2.map(dia => ({
     aluno_id: alunoId,
     dia_semana: dia,
     hora_inicio: agendaSelecionada[dia].ini,
@@ -762,11 +754,6 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 function trocarTela(tela) {
-  document.querySelectorAll('.screen').forEach(s => {
-    s.classList.remove('active')
-  })
-
-  document.getElementById(`screen-${tela}`).classList.add('active')
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
+  document.getElementById(`screen-${tela}`)?.classList.add('active')
 }
-
-
