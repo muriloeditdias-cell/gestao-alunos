@@ -15,30 +15,23 @@ function setLoginError(msg){
   show(box)
 }
 
-// ======================= TOGGLE GRADE (2 TELAS) =======================
+// ======================= TOGGLE GRADE (SÓ CADASTRO +) =======================
 let gradeAberta = true
 
 function setGradeOpen(isOpen){
+  const box = document.getElementById('gradeContainerCadastro')
+  const icon = document.getElementById('toggleGradeIconCadastro')
+  if (!box || !icon) return
+
   gradeAberta = !!isOpen
 
-  const containers = [
-    document.getElementById('gradeContainerAlunos'),
-    document.getElementById('gradeContainerCadastro'),
-  ].filter(Boolean)
-
-  const icons = [
-    document.getElementById('toggleGradeIconAlunos'),
-    document.getElementById('toggleGradeIconCadastro'),
-  ].filter(Boolean)
-
-  containers.forEach(box => {
-    if (gradeAberta) box.classList.remove('closed')
-    else box.classList.add('closed')
-  })
-
-  icons.forEach(icon => {
-    icon.textContent = gradeAberta ? '▲' : '▼'
-  })
+  if (gradeAberta) {
+    box.classList.remove('closed')
+    icon.textContent = '▲'
+  } else {
+    box.classList.add('closed')
+    icon.textContent = '▼'
+  }
 }
 
 // precisa existir pro onclick do HTML
@@ -82,7 +75,7 @@ async function applyAuthUI(){
     hide(loginModal)
     show(app)
 
-    // grade começa aberta nas duas telas
+    // grade começa aberta no cadastro
     setGradeOpen(true)
 
     atualizarAgendaUI()
@@ -342,7 +335,7 @@ window.verAlunosDoHorario = async function(dia, ini, fim){
   }
 }
 
-// ======================= GRADE (DUAS TELAS) =======================
+// ======================= GRADE (SÓ CADASTRO +) =======================
 function cellDiv(text, cls){
   const d = document.createElement('div')
   d.className = cls
@@ -355,8 +348,7 @@ function isSelecionado(dia, ini, fim){
   return sel && sel.ini === ini && sel.fim === fim
 }
 
-// renderiza em UM alvo (alunos = só ver / cadastro = seleciona agenda)
-function renderGradeInto(targetId, countMap, selectable){
+function renderGradeInto(targetId, countMap){
   const gradeEl = document.getElementById(targetId)
   if (!gradeEl) return
 
@@ -402,35 +394,33 @@ function renderGradeInto(targetId, countMap, selectable){
           </div>
         `
 
-        // ✅ só no cadastro (+) permite selecionar agenda clicando no card
-        if (selectable) {
-          box.addEventListener('click', async (ev) => {
-            if (ev.target && ev.target.classList.contains('mini')) return
+        // ✅ cadastro (+) seleciona agenda clicando no card
+        box.addEventListener('click', async (ev) => {
+          if (ev.target && ev.target.classList.contains('mini')) return
 
-            const freq = getFreq()
-            if (!freq) return alert('Escolha a frequência (x/semana) antes de montar a agenda.')
+          const freq = getFreq()
+          if (!freq) return alert('Escolha a frequência (x/semana) antes de montar a agenda.')
 
-            const jaTemDia = !!agendaSelecionada[d.key]
-            const totalSel = Object.keys(agendaSelecionada).length
-            if (!jaTemDia && totalSel >= freq) {
-              return alert(`Você já selecionou ${totalSel}/${freq} dias. Remova um dia para adicionar outro.`)
+          const jaTemDia = !!agendaSelecionada[d.key]
+          const totalSel = Object.keys(agendaSelecionada).length
+          if (!jaTemDia && totalSel >= freq) {
+            return alert(`Você já selecionou ${totalSel}/${freq} dias. Remova um dia para adicionar outro.`)
+          }
+
+          try{
+            const qtdAgora = await contarNoDiaSlot(d.key, ini, fim)
+            if (qtdAgora >= LIMITE_POR_SLOT) {
+              return alert(`CHEIO: ${d.label} ${ini}-${fim} (${qtdAgora}/${LIMITE_POR_SLOT})`)
             }
+          }catch(e){
+            console.error(e)
+            return alert('Erro ao checar lotação (veja o console).')
+          }
 
-            try{
-              const qtdAgora = await contarNoDiaSlot(d.key, ini, fim)
-              if (qtdAgora >= LIMITE_POR_SLOT) {
-                return alert(`CHEIO: ${d.label} ${ini}-${fim} (${qtdAgora}/${LIMITE_POR_SLOT})`)
-              }
-            }catch(e){
-              console.error(e)
-              return alert('Erro ao checar lotação (veja o console).')
-            }
-
-            agendaSelecionada[d.key] = { ini, fim }
-            atualizarAgendaUI()
-            renderGrade(ultimoCountMap || countMap)
-          })
-        }
+          agendaSelecionada[d.key] = { ini, fim }
+          atualizarAgendaUI()
+          renderGrade(ultimoCountMap || countMap)
+        })
       }
 
       cell.appendChild(box)
@@ -444,8 +434,7 @@ function renderGradeInto(targetId, countMap, selectable){
 
 function renderGrade(countMap){
   ultimoCountMap = countMap
-  renderGradeInto('gradeAlunos', countMap, false)   // tela alunos: só ver
-  renderGradeInto('gradeCadastro', countMap, true)  // tela +: seleciona agenda
+  renderGradeInto('gradeCadastro', countMap) // ✅ só cadastro
 }
 
 // ======================= PAGAMENTO =======================
@@ -491,7 +480,6 @@ window.togglePagamentoMes = async function(alunoId, comp, btnEl){
 // ======================= LISTAR ALUNOS =======================
 async function listarAlunos(){
   const busca = (document.getElementById('busca')?.value || '').trim()
-  const filtro = document.getElementById('filtro')?.value || 'todos'
 
   const { data: alunos, error: errAlunos } = await supabaseClient
     .from('alunos')
@@ -528,9 +516,6 @@ async function listarAlunos(){
 
     const pag = pagMap.get(`${aluno.id}|${compAluno}`)
     const statusPago = pag?.pago === true
-
-    if (filtro === 'pagos' && !statusPago) return
-    if (filtro === 'abertos' && statusPago) return
 
     const planoShow = aluno.plano_tipo
       ? `${aluno.plano_tipo} • ${aluno.freq_semana || '-'}x/sem`
@@ -721,8 +706,7 @@ window.adicionarAluno = async function(){
 
   const alunoId = alunoCriado.id
 
-  const diasEscolhidos2 = Object.keys(agendaSelecionada)
-  const rowsAgenda = diasEscolhidos2.map(dia => ({
+  const rowsAgenda = diasEscolhidos.map(dia => ({
     aluno_id: alunoId,
     dia_semana: dia,
     hora_inicio: agendaSelecionada[dia].ini,
