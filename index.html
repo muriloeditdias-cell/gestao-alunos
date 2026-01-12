@@ -55,9 +55,77 @@
 
 <!-- APP (começa escondido, o JS mostra depois do login) -->
 <div id="app" class="hidden">
-  <div class="topbar">
-    <h1>Gestão de Alunos</h1>
-    <button class="btn danger" type="button" onclick="logout()">Sair</button>
+  <div class="app-container">
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <button class="header-link" onclick="abrirSuporte()">Suporte</button>
+    <button class="header-link danger" onclick="logout()">Sair</button>
+  </header>
+
+  <!-- TELAS -->
+  <main class="screens">
+
+    <!-- HOME / ALUNOS -->
+    <section id="screen-alunos" class="screen active">
+      <h1 class="welcome">
+        Bem-vinda<br>
+        <span>Franciele</span>
+      </h1>
+
+      <div class="section-card">
+        <button class="toggle-grade" onclick="toggleGrade()">
+          <span>Grade de horários</span>
+          <span id="toggleGradeIcon">▲</span>
+        </button>
+
+        <div id="gradeContainer">
+          <!-- SUA GRADE VAI CONTINUAR AQUI -->
+        </div>
+      </div>
+
+      <div class="section-card">
+        <input
+          id="busca"
+          placeholder="Buscar aluno pelo nome..."
+          oninput="listarAlunos()"
+        />
+
+        <table>
+          <thead>
+            <tr>
+              <th>Aluno</th>
+              <th>Plano</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="lista"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CADASTRO -->
+    <section id="screen-cadastro" class="screen">
+      <h2>Novo aluno</h2>
+      <div id="formCadastro"></div>
+    </section>
+
+    <!-- STUDIO -->
+    <section id="screen-studio" class="screen center">
+      <h2>Em breve…</h2>
+    </section>
+
+  </main>
+
+  <!-- MENU INFERIOR -->
+  <nav class="bottom-nav">
+    <button onclick="trocarTela('alunos')">Alunos</button>
+    <button class="add" onclick="trocarTela('cadastro')">+</button>
+    <button onclick="trocarTela('studio')">Studio</button>
+  </nav>
+
+</div>
+
   </div>
 
   <div class="form" id="formTopo">
@@ -162,6 +230,7 @@
 <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
