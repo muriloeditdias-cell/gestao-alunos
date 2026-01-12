@@ -1074,3 +1074,29 @@ table {
 .screen { display: none !important; }
 .screen.active { display: block !important; }
 
+/* Evita a tela "puxar" pro lado quando a grade é larga */
+.screens, .screen, .section-card, .form {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* A grade pode ser larga, então ela que rola (não a página toda) */
+#gradeContainer {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Garante que o grid não quebre e fique rolável */
+#grade {
+  min-width: 720px; /* ajuste se quiser mais/menos */
+}
+
+/* Form normal no celular */
+#screen-cadastro .form input,
+#screen-cadastro .form select,
+#screen-cadastro .form button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
