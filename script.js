@@ -330,6 +330,11 @@ window.verAlunosDoHorario = async function(dia, ini, fim){
       <div class="slot-topline"><b>Vagas:</b> ${total}/${LIMITE_POR_SLOT}</div>
       <div class="slot-lista">${listaHtml}</div>
     `
+
+    // ✅ LIMPA o rodapé (caso tenha ficado botão do perfil antes)
+    const foot = document.getElementById('modalFoot')
+    if (foot) foot.innerHTML = ''
+
     document.getElementById('modal').classList.remove('hidden')
   }catch(e){
     console.error(e)
@@ -595,7 +600,6 @@ window.abrirPerfil = async function(id){
     return `${lbl}: ${normTime(a.hora_inicio)}-${normTime(a.hora_fim)}`
   }).join('<br>') || '-'
 
-  // ✅ BOTÕES DENTRO DO "VER"
   const statusAtual = pag?.pago === true
   const toggleTxt = statusAtual ? 'Marcar como em aberto' : 'Marcar como pago'
   const nomeEsc = escapeHtml(aluno.nome || '').replaceAll("'", "\\'")
@@ -623,8 +627,12 @@ window.abrirPerfil = async function(id){
     </div>
 
     ${wppLink ? `<a class="link" href="${wppLink}" target="_blank">Abrir WhatsApp</a>` : ''}
+  `
 
-    <div class="perfil-actions">
+  // ✅ BOTÕES NO RODAPÉ (sem duplicar / sem mensagem azul)
+  const foot = document.getElementById('modalFoot')
+  if (foot) {
+    foot.innerHTML = `
       <button
         class="btn ${statusAtual ? 'aberto' : 'pago'}"
         data-status="${statusAtual ? '1' : '0'}"
@@ -632,8 +640,9 @@ window.abrirPerfil = async function(id){
       >${toggleTxt}</button>
 
       <button class="btn danger" onclick="excluirAluno(${id}, '${nomeEsc}')">Excluir aluno</button>
-    </div>
-  `
+    `
+  }
+
   document.getElementById('modal').classList.remove('hidden')
 }
 
