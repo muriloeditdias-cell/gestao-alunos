@@ -525,13 +525,18 @@ async function listarAlunos(){
       : '-'
 
     const tr = document.createElement('tr')
-    tr.innerHTML = `
-      <td>${escapeHtml(aluno.nome)}</td>
-      <td>${escapeHtml(planoShow)}</td>
-      <td>${escapeHtml(proxBR)}</td>
-      <td class="acoes">${statusBtn}${perfilBtn}${excluirBtn}</td>
-    `
-    tbody.appendChild(tr)
+tr.innerHTML = `
+  <td>${escapeHtml(aluno.nome)}</td>
+  <td>${escapeHtml(planoShow)}</td>
+  <td>
+    <button class="btn ${statusPago ? 'pago' : 'aberto'}"
+      onclick="abrirPerfil(${aluno.id})"
+    >
+      ${statusPago ? 'Pago' : 'Em aberto'}
+    </button>
+  </td>
+`
+tbody.appendChild(tr)
   })
 }
 
@@ -732,4 +737,5 @@ function trocarTela(tela) {
 
   document.getElementById(`screen-${tela}`).classList.add('active');
 }
+
 
