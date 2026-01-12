@@ -122,17 +122,18 @@
           <input id="observacoes" placeholder="Observações (opcional)" />
 
           <!-- GRADE (CADASTRO +) -->
-          <div class="section-card">
-            <button class="toggle-grade" type="button" onclick="toggleGrade()">
-              <span>Grade de horários</span>
-              <span id="toggleGradeIconCadastro">▲</span>
-            </button>
+<div class="section-card">
+  <button class="toggle-grade" type="button" onclick="toggleGrade('cadastro')">
+    <span>Grade de horários</span>
+    <span id="toggleGradeIconCadastro">▲</span>
+  </button>
 
-            <div id="gradeContainerCadastro">
-              <div class="grade" id="gradeCadastro"></div>
-              <p class="dica">Clique no card para selecionar o horário. Clique em “Ver” para listar alunos do horário.</p>
-            </div>
-          </div>
+  <div id="gradeContainerCadastro" class="grade-scroll">
+    <div class="grade" id="gradeCadastro"></div>
+    <p class="dica">Clique no card para selecionar o horário. Clique em “Ver” para listar alunos do horário.</p>
+  </div>
+</div>
+
 
           <button type="button" onclick="adicionarAluno()">Adicionar</button>
 
@@ -180,4 +181,5 @@
 <script src="script.js"></script>
 </body>
 </html>
+
 
