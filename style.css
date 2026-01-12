@@ -993,5 +993,44 @@ table {
   height: 60vh;
 }
 
+/* ===== AJUSTE: ocupar mais a tela no celular (menos "espremido") ===== */
+
+/* 1) No mobile, tira o padding grande do body */
+@media (max-width: 700px) {
+  body {
+    padding: 0 !important;
+  }
+
+  /* 2) Garante que o app use 100% da largura */
+  #app {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* 3) Espaçamento do conteúdo (em vez de padding no body) */
+  .screens {
+    padding: 14px !important; /* ajuste fino: 12~18 */
+  }
+
+  /* 4) Cards e tabela ocupando toda a largura */
+  .section-card {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* 5) Input de busca e tabela sempre 100% */
+  .section-card input,
+  .section-card table {
+    width: 100% !important;
+  }
+}
+
+/* 6) Em qualquer tamanho: tabela usa todo o espaço do card */
+.section-card table {
+  width: 100%;
+}
+
 
 
