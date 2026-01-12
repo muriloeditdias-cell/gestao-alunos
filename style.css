@@ -1100,3 +1100,28 @@ table {
   box-sizing: border-box;
 }
 
+/* === PERMITIR ARRASTAR A GRADE PRO LADO (MOBILE) === */
+
+/* container da grade: pode rolar horizontal */
+#gradeContainer {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+
+/* a grade interna precisa ser mais larga que a tela */
+#grade {
+  min-width: 900px; /* pode ajustar: 800 / 1000 se quiser */
+}
+
+/* evita que o body capture o gesto horizontal */
+body {
+  overscroll-behavior-x: contain;
+}
+
+/* garante que os cards não travem o toque */
+.slotbox {
+  touch-action: manipulation;
+}
+
