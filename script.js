@@ -1,4 +1,4 @@
-// ======================= SUPABASE (UMD) =======================
+/ ======================= SUPABASE (UMD) =======================
 const supabaseUrl = 'https://tfhepryxbfbpfljtfryg.supabase.co'
 const supabaseKey = 'sb_publishable_eR6QRHgsbqbDvzoQ3JJeeA_qbzRAn8T'
 const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
@@ -768,3 +768,4 @@ function trocarTela(tela) {
 
   document.getElementById(`screen-${tela}`).classList.add('active')
 }
+
