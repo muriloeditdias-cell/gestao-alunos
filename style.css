@@ -938,7 +938,7 @@ table {
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(14px);
   border-radius: 20px;
-  padding: 16px;
+  padding: 16px 12px;
   margin-bottom: 20px;
 }
 
@@ -1328,5 +1328,6 @@ input:focus, select:focus{
   opacity: 1;
   transform: scale(1.05);
 }
+
 
 
