@@ -78,16 +78,22 @@ async function applyAuthUI(){
 
   const { data: { session } } = await supabaseClient.auth.getSession()
 
-  if (session) {
-    hide(loginModal)
-    show(app)
+ if (session) {
+  hide(loginModal)
+  show(app)
 
-    // grade começa aberta no cadastro
-    setGradeOpen(true)
+  // 🔥 animação de entrada do app
+  app.classList.remove('enter')
+  void app.offsetWidth // força reflow
+  app.classList.add('enter')
 
-    atualizarAgendaUI()
-    await listarAlunos()
-  } else {
+  // grade começa aberta no cadastro
+  setGradeOpen(true)
+
+  atualizarAgendaUI()
+  await listarAlunos()
+}
+ else {
     hide(app)
     show(loginModal)
   }
@@ -787,4 +793,5 @@ function trocarTela(tela) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
   document.getElementById(`screen-${tela}`)?.classList.add('active')
 }
+
 
