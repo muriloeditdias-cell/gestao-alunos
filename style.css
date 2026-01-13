@@ -1329,6 +1329,15 @@ input:focus, select:focus{
   transform: scale(1.05);
 }
 
+.app-container {
+  max-width: 100%;
+}
+
+.screens {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 
 
 
